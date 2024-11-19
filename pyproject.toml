@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "cryptopricetracker"
+version = "0.1.0"
+description = ""
+authors = ["md <marceldiomare@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.5"
+aiohttp = "^3.11.2"
+sqlalchemy = {version = "2.0.36", extras = ["asyncio"]}
+asyncpg = "^0.30.0"
+mypy = "^1.13.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+pytest-asyncio = "^0.24.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+ignore_missing_imports = true  # Если некоторые библиотеки не имеют аннотаций
+namespace_packages = true
+plugins = ["sqlalchemy.ext.mypy.plugin"]
