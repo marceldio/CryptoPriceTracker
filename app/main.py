@@ -4,8 +4,23 @@ from app.database import async_session
 from app.models import Price
 from sqlalchemy import select, and_, desc, bindparam
 from typing import AsyncGenerator
+from dotenv import load_dotenv
+import os
+
+# Загружаем переменные окружения из .env файла
+load_dotenv()
+
+# Используем переменные
+DATABASE_URL = os.getenv("DATABASE_URL")
+DEBUG = os.getenv("DEBUG", "False") == "True"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 app = FastAPI()
+
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to CryptoPriceTracker API"}
 
 
 # Функция для получения сессии
