@@ -27,3 +27,4 @@ async def save_price_to_db(session: AsyncSession, price_data: dict):
     price = Price(**price_data)
     session.add(price)
     await session.commit()
+    print(f"Saved to DB: {price_data}")

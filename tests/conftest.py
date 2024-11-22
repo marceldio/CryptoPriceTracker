@@ -5,10 +5,11 @@ from httpx import AsyncClient, ASGITransport
 from sqlalchemy import text
 import asyncio
 
+
 @pytest_asyncio.fixture(scope="session")
 def event_loop():
-    """Фикстура для использования одного event loop на уровне сессии."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
+    """Создание одного цикла событий на сессию."""
+    loop = asyncio.new_event_loop()
     yield loop
     loop.close()
 
