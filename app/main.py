@@ -9,6 +9,8 @@ import os
 from app.deribit_client import DeribitClient
 import aiohttp
 import asyncio
+from contextlib import asynccontextmanager
+
 
 # Загружаем переменные окружения из .env файла
 load_dotenv()
@@ -18,19 +20,16 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with aiohttp.ClientSession() as session:
+        client = DeribitClient(session=session, db_session=async_session())
+        asyncio.create_task(client.run())
+        yield  # Логика продолжится после старта приложения
 
 
-# Инициализация DeribitClient
-@app.on_event("startup")
-async def start_background_tasks():
-    async def run_client():
-        async with aiohttp.ClientSession() as session:
-            client = DeribitClient(session=session, db_session=async_session())
-            await client.run()
-
-    # Запускаем клиент в отдельной задаче
-    asyncio.create_task(run_client())
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
