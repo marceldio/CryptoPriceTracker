@@ -12,8 +12,9 @@ import asyncio
 from contextlib import asynccontextmanager
 
 
-# Загружаем переменные окружения из .env файла
-load_dotenv()
+# Загрузка переменных окружения
+env_file = ".env.docker" if os.getenv("DOCKER_ENV", False) else ".env"
+load_dotenv(env_file)
 
 # Используем переменные
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -45,7 +46,8 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
 
 @app.get("/prices/")
 async def get_prices(
-    ticker: str = Query(..., description="Ticker of the currency (e.g., btc_usd, eth_usd)"),
+    ticker: str = Query(
+        ..., description="Ticker of the currency (e.g., btc_usd, eth_usd)"),
     session: AsyncSession = Depends(get_session),
 ):
     stmt = (
@@ -67,7 +69,8 @@ async def get_prices(
 
 @app.get("/prices/last/")
 async def get_last_price(
-    ticker: str = Query(..., description="Ticker of the currency (e.g., btc_usd, eth_usd)"),
+    ticker: str = Query(
+        ..., description="Ticker of the currency (e.g., btc_usd, eth_usd)"),
     session: AsyncSession = Depends(get_session),
 ):
     # noinspection PyTypeChecker
@@ -88,8 +91,12 @@ async def get_last_price(
 
 @app.get("/prices/filter/")
 async def get_filtered_prices(
-    ticker: str = Query(..., description="Ticker of the currency (e.g., btc_usd, eth_usd)"),
-    start_date: int = Query(..., description="Start date as UNIX timestamp"),
+    ticker: str = Query(...,
+                        description="Ticker of the currency ("
+                                    "e.g., btc_usd, eth_usd)"
+                        ),
+    start_date: int = Query(
+        ..., description="Start date as UNIX timestamp"),
     end_date: int = Query(..., description="End date as UNIX timestamp"),
     session: AsyncSession = Depends(get_session),
 ):
@@ -98,7 +105,8 @@ async def get_filtered_prices(
         .where(
             and_(
                 Price.ticker == bindparam('ticker'),
-                Price.timestamp.between(bindparam('start_date'), bindparam('end_date'))
+                Price.timestamp.between(
+                    bindparam('start_date'), bindparam('end_date'))
             )
         )
     )

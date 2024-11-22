@@ -22,7 +22,8 @@ async def setup_database():
     yield
     # Очищаем данные после тестов (опционально)
     async with async_session() as session:
-        await session.execute(text("TRUNCATE TABLE prices RESTART IDENTITY CASCADE;"))
+        await session.execute(
+            text("TRUNCATE TABLE prices RESTART IDENTITY CASCADE;"))
         await session.commit()
 
 
@@ -41,5 +42,7 @@ async def client(db_session):
     """Фикстура для HTTP-клиента."""
     # Убедимся, что app использует изолированный контекст
     app.dependency_overrides = {}  # Очистка зависимостей
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://testserver") as c:
+    async with AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url="http://testserver") as c:
         yield c

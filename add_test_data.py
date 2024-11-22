@@ -1,6 +1,7 @@
 import asyncio
 from app.database import async_session, save_price_to_db
 
+
 async def add_test_data():
     test_data = [
         {"ticker": "btc_usd", "price": 50550, "timestamp": 1711975140},

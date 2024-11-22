@@ -6,8 +6,10 @@ from app.database import save_price_to_db
 
 BASE_URL = "https://www.deribit.com/api/v2/public/get_index_price"
 
+
 class DeribitClient:
-    def __init__(self, session: aiohttp.ClientSession, db_session: AsyncSession):
+    def __init__(
+            self, session: aiohttp.ClientSession, db_session: AsyncSession):
         self.session = session
         self.db_session = db_session
 
@@ -16,7 +18,8 @@ class DeribitClient:
         async with self.session.get(BASE_URL, params=params) as response:
             if response.status == 200:
                 data = await response.json()
-                print(f"Fetched data for {ticker}: {data}")  # Добавлено логирование
+                print(
+                    f"Fetched data for {ticker}: {data}")
                 current_time = datetime.now(timezone.utc)
                 return {
                     "ticker": ticker,
@@ -24,9 +27,11 @@ class DeribitClient:
                     "timestamp": int(current_time.timestamp())
                 }
             else:
-                print(f"Failed to fetch {ticker}, status: {response.status}")  # Логирование ошибок
-                raise Exception(f"Failed to fetch {ticker}, status: {response.status}")
-
+                print(
+                    f"Failed to fetch {ticker}, "
+                    f"status: {response.status}")
+                raise Exception(
+                    f"Failed to fetch {ticker}, status: {response.status}")
 
     async def run(self):
         while True:

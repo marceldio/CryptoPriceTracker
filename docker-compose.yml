@@ -1,19 +1,22 @@
-version: "3.9"
+version: '3.9'
+
 services:
   app:
     build:
       context: .
-    environment:
-      - DATABASE_URL=${DATABASE_URL}  # Переменная из .env.docker
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
     env_file:
-      - .env.docker
+      - .env.docker  # Указываем файл переменных окружения
     depends_on:
       - db
 
   db:
     image: postgres:15
+    restart: always
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_USER: ${POSTGRES_USER}  # Загружается из .env.docker
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:

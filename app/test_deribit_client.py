@@ -18,7 +18,9 @@ async def main():
             # Добавляем проверку вызова save_price_to_db
             for ticker in ["btc_usd", "eth_usd"]:
                 price_data = await client.fetch_price(ticker)
-                print(f"Attempting to save data for {ticker}: {price_data}")  # Отладочный вывод
+                print(f"Attempting to save data for "
+                      f"{ticker}: {price_data}"
+                      )
                 await save_price_to_db(db_session, price_data)
 
 if __name__ == "__main__":

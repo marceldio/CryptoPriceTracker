@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import text
 
-DATABASE_URL_TEST = "sqlite+aiosqlite:///:memory:"  # Используем SQLite для тестов.
+DATABASE_URL_TEST = "sqlite+aiosqlite:///:memory:"
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -56,7 +56,10 @@ async def test_get_filtered_prices(client, db_session: AsyncSession):
     await db_session.commit()
 
     # Устанавливаем фильтр по времени
-    response = await client.get("/prices/filter/?ticker=btc_usd&start_date=1700000000&end_date=1700001999")
+    response = await client.get(
+        "/prices/filter/?ticker=btc_usd&start_date=1700000000"
+        "&end_date=1700001999"
+    )
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 2  # Должно вернуться 2 записи
