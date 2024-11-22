@@ -2,7 +2,7 @@ import aiohttp
 from datetime import datetime, timezone
 import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import save_price_to_db
+from app.database import save_price_to_db
 
 BASE_URL = "https://www.deribit.com/api/v2/public/get_index_price"
 
